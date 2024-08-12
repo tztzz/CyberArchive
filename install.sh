@@ -10,4 +10,6 @@ npm i @mozilla/readability
 npm i jsdom
 npm i express
 npm i workerpool
+npm i sqlite3
+npm i cors
 npm audit fix

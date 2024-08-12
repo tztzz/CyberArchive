@@ -1,3 +1,7 @@
 data/*
 misc/.*
 dump-dom.mjs.save
+archive.db
+frontend/.vscode
+frontend/package*
+frontend/node_modules

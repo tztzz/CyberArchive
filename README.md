@@ -1,6 +1,7 @@
 # CyberArchive - DOM Caching
 #### Installation
 Just execute the file `install.sh` under after setting the correct execution permissions. Tested Setup: `Debian 6.1.82-1 (2024-03-28) x86_64 GNU/Linux`.
+To initialize the frontend, goto `/frontend` and execute: `npm install && npm run dev`.
 
 #### Usage (Node Module \[outdated])
 ```bash
@@ -36,6 +37,7 @@ $ node app.js
 ```bash
 $ curl -X GET http://127.0.0.1:3000/archive?url=https://evil.com
 ```
+The index `/` contains information about the workers utilization.
 
 #### Architecture
 

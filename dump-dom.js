@@ -49,7 +49,8 @@ module.exports = {
             ]
         });
 
-        const hashPath = `${currentPath}/data/${folderHash.digest('hex')}/`;
+        const hashDigest = folderHash.digest('hex')
+        const hashPath = `${currentPath}/data/${hashDigest}/`;
 
         if (!fs.existsSync(hashPath)) {
             fs.mkdirSync(hashPath);
@@ -122,5 +123,7 @@ module.exports = {
             console.log('[!] Abording: URL already in cached.');
             await browser.close();
         }
+
+        return hashDigest
     }
 }

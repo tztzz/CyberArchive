@@ -1,0 +1,12 @@
+.navbar-brand a {
+    color: #fff;
+    font-size: 2rem;
+}
+
+.navbar {
+    padding: 0 1rem;
+}
+
+.section {
+    padding: 2rem 1.5rem;
+}
