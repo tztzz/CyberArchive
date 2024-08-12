@@ -6,6 +6,8 @@ import https from 'node:https';
 import crypto from 'node:crypto';
 
 import { PuppeteerBlocker } from '@cliqz/adblocker-puppeteer';
+import { Readability } from '@mozilla/readability';
+import { JSDOM } from 'jsdom';
 
 const url = process.argv[2];
 
@@ -70,8 +72,17 @@ if (!fs.existsSync(hashPath)) {
             }
         });
 
+        const domJS = new JSDOM(source, {url: url});
+
+        fs.writeFile(`${hashPath}/readability.html`, new Readability(domJS.window.document).parse().content, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+
         const metadata = {
-            'title': await page.title()
+            'title': await page.title(),
+            'time': Math.floor(Date.now() / 1000)
         };
 
         fs.writeFile(`${hashPath}/metadata.json`, JSON.stringify(metadata, null, 2), err => {

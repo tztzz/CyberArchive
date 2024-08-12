@@ -5,5 +5,7 @@ nvm install 20
 node -v
 npm -v
 npm i puppeteer
-npm i --save @cliqz/adblocker-puppeteer
+npm i @cliqz/adblocker-puppeteer
+npm i @mozilla/readability
+npm i jsdom
 npm audit fix
