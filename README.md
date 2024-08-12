@@ -2,7 +2,7 @@
 #### Installation
 Just execute the file `install.sh` under after setting the correct execution permissions. Tested Setup: `Debian 6.1.82-1 (2024-03-28) x86_64 GNU/Linux`.
 
-#### Usage
+#### Usage (Node Module \[outdated])
 ```bash
 $ node dump-dom.mjs https://someurl.com/
 ```
@@ -26,6 +26,16 @@ ca4c460e6f3c65f7296f136e0e203b375dff565402f0c46e14cad3826697f936/
 - The file `favicon.png` contains a 32x32 favicon of the archived page
 - The file `headers.json` holds HTTP-response headers as a JSON object
 - The file `metadata.json` holds metadata about the archived page (title, timestamp)
+
+#### Usage (API \[recommended])
+1. Start the express server:
+```bash
+$ node app.js
+```
+2. Submit a new task to archive an URL:
+```bash
+$ curl -X GET http://127.0.0.1:3000/archive?url=https://evil.com
+```
 
 #### Architecture
 
