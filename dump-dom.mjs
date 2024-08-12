@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// this module is outdated, please refer to dump-dom.js
 import puppeteer from 'puppeteer';
 import path from 'node:path';
 import fs from 'node:fs';
@@ -51,7 +52,7 @@ const browser = await puppeteer.launch({
     ]
 });
 
-const hashPath = `${currentPath}/${folderHash.digest('hex')}/`;
+const hashPath = `${currentPath}/data/${folderHash.digest('hex')}/`;
 
 if (!fs.existsSync(hashPath)) {
     fs.mkdirSync(hashPath);
@@ -82,7 +83,7 @@ if (!fs.existsSync(hashPath)) {
 
         const metadata = {
             'title': await page.title(),
-            'time': Math.floor(Date.now() / 1000)
+            'timestamp': Math.floor(Date.now() / 1000)
         };
 
         fs.writeFile(`${hashPath}/metadata.json`, JSON.stringify(metadata, null, 2), err => {

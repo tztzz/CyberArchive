@@ -8,4 +8,6 @@ npm i puppeteer
 npm i @cliqz/adblocker-puppeteer
 npm i @mozilla/readability
 npm i jsdom
+npm i express
+npm i workerpool
 npm audit fix
