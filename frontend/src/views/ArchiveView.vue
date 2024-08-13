@@ -1,8 +1,9 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
 const route = useRoute();
+const router = useRouter()
 const fileHash = ref(route.params.hash)
 const mode = ref('dom')
 const metaData = ref({})
@@ -32,6 +33,18 @@ const getHeaders = async () => {
     }
 }
 
+const deleteEntry = async () => {
+    try {
+        const res = await fetch('http://localhost:3000/delete?hash=' + route.params.hash)
+        if (res.ok || res.status === 204) {
+            router.push({path: '/'})
+        }
+    }
+    catch (err) {
+        console.error(err)
+    }
+}
+
 onMounted(getMeta)
 onMounted(getHeaders)
 </script>
@@ -46,7 +59,8 @@ onMounted(getHeaders)
         <hr>
         <div class="mb-4">
             <button class="button is-small mr-4" @click="changeMode('dom')">DOM View</button>
-            <button class="button is-small" @click="changeMode('readability')">Reader View</button>
+            <button class="button is-small mr-4" @click="changeMode('readability')">Reader View</button>
+            <button class="button is-small" @click="deleteEntry()">Delete</button>
         </div>
         <div class="frame">
             <iframe frameborder="0" height="800" scrolling="yes" :src="'http://localhost:3000/read/' + mode + '?hash=' + route.params.hash"></iframe>

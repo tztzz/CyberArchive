@@ -3,6 +3,7 @@ const sql = require('sqlite3').verbose()
 const workerpool = require('workerpool')
 const path = require('path')
 const cors = require('cors')
+const fs = require('fs')
 
 const corsOptions = {
     origin: '*',
@@ -74,6 +75,22 @@ app.get('/read/metadata', cors(corsOptions), (req, res) => {
 app.get('/read/headers', cors(corsOptions), (req, res) => {
     const fileHash = req.query.hash
     res.sendFile(path.join(__dirname, `data/${fileHash}/headers.json`))
+})
+
+app.get('/delete', cors(corsOptions), (req, res) => {
+    const fileHash = req.query.hash
+    
+    if (fs.existsSync(`./data/${fileHash}/`)) {
+        fs.rmSync(`./data/${fileHash}/`, {recursive: true, force: true})
+    }
+
+    db.run('DELETE FROM archive WHERE hashident = (?)', fileHash, (err) => {
+        if (err) {
+            throw err;
+        }
+    })
+
+    res.json({'deleted': true})
 })
 
 app.listen(3000, () => console.log('[!] Express server listening on port 3000.'))

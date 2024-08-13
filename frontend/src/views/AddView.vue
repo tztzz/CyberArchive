@@ -16,7 +16,7 @@ const addUrl = async () => {
     data.value = await res.json();
   }
   catch (err) {
-    error.value = err.message;
+    console.log(err.message)
   }
   finally {
     submitted.value = true
