@@ -12,11 +12,14 @@ const archivePage = async (url) => {
     workerpool.workerEmit('[-] Proceeding request ..')
 
     const folderHash = await dd.dumpDOM(url)
-    await db.run(`
-        INSERT INTO archive (id, url, hashident)
-        VALUES (?, ?, ?)`,
-        [null, url, folderHash]
-    )
+
+    if(folderHash) {
+        await db.run(`
+            INSERT INTO archive (id, url, hashident)
+            VALUES (?, ?, ?)`,
+            [null, url, folderHash]
+        )
+    }
 
     workerpool.workerEmit('[!] Request done.')
     return true

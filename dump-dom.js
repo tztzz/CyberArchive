@@ -124,23 +124,16 @@ module.exports = {
                     fs.writeFile(`${hashPath}/dom.html`, modified, err => {
                         if (err) console.error(err)
                     })
-                
-                    //console.log('File links:', Array.from(links).map(link => link.href));
-                
                 })
 
                 fs.writeFile(`${hashPath}/headers.json`, JSON.stringify(response.headers(), null, 2), err => {
-                    if (err) {
-                        console.log(err);
-                    }
+                    if (err) console.error(err)
                 })
 
                 const domJS = new jsdom.JSDOM(source, {url: url});
 
                 fs.writeFile(`${hashPath}/readability.html`, new rv.Readability(domJS.window.document).parse().content, err => {
-                    if (err) {
-                        console.log(err);
-                    }
+                    if (err) console.error(err)
                 });
 
                 const metadata = {
@@ -149,11 +142,10 @@ module.exports = {
                 };
 
                 fs.writeFile(`${hashPath}/metadata.json`, JSON.stringify(metadata, null, 2), err => {
-                    if (err) {
-                        console.log(err);
-                    }
+                    if (err) console.error(err)
                 });
 
+                // still doesn't work (emtpy file) probably async issue
                 const faviconUrl = `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=32`;
                 const faviconDat = fs.createWriteStream(`${hashPath}/favicon.png`);
 
@@ -162,19 +154,18 @@ module.exports = {
                 });
             }
             catch (err) {
-                console.log(err);
+                console.error(err);
             }
             finally {
                 await browser.close();
             }
 
             console.log('[!] Success: URL cached under', hashPath);
+            return hashDigest
         }
         else {
             console.log('[!] Abording: URL already in cached.');
             await browser.close();
         }
-
-        return hashDigest
     }
 }
