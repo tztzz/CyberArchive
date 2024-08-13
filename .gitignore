@@ -2,6 +2,7 @@ data/*
 misc/.*
 dump-dom.mjs.save
 archive.db
+atom.mjs
 frontend/.vscode
 frontend/package*
 frontend/node_modules

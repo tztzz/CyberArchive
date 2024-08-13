@@ -61,14 +61,32 @@ module.exports = {
 
                 // https://www.whatismybrowser.com/guides/the-latest-user-agent/chrome
                 page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36');
+                
                 let source, response;
+                let cssHashes = []
 
                 try {
                     response = await page.goto(url, { waitUntil: ['load', 'domcontentloaded'] })
                     source = await page.content();
+
+                    // CSS
+                    const cssFiles = await page.$$eval('link[rel="stylesheet"', links => links.map(link => link.href))
+                    fs.mkdirSync(hashPath + 'css')
+
+                    for (const href of cssFiles) {
+                        console.log('[!] Downloading CSS', href)
+
+                        const res = await page.goto(href, {waitUntil: 'networkidle2'})
+                        const path = href.split('/').pop()
+                        const cssHash = crypto.createHash('sha256').update(path).digest('hex')
+
+                        cssHashes.push({path, cssHash})
+                        
+                        await fs.promises.writeFile(`${hashPath}css/${cssHash}.css`, await res.buffer())
+                    }
                 }
                 catch (err) {
-                    console.log('[!] URL unreachable.')
+                    console.error(err)
                     await browser.close();
                 }
 
@@ -78,11 +96,25 @@ module.exports = {
                     }
                 });
 
+                // replace ops
+                console.log(cssHashes)
+                await fs.readFile(`${hashPath}/dom.html`, 'utf8', (err, data) => {
+                    if (err) console.error(err)
+
+                    // match CSS and replace them with cassHashes
+
+                    /*
+                    fs.writeFile(`${hashPath}/dom.html`, data, err => {
+                        if (err) console.error(err)
+                    })
+                    */
+                })
+
                 fs.writeFile(`${hashPath}/headers.json`, JSON.stringify(response.headers(), null, 2), err => {
                     if (err) {
                         console.log(err);
                     }
-                });
+                })
 
                 const domJS = new jsdom.JSDOM(source, {url: url});
 
