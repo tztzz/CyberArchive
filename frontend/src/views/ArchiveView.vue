@@ -63,7 +63,7 @@ onMounted(getHeaders)
             <button class="button is-small" @click="deleteEntry()">Delete</button>
         </div>
         <div class="frame">
-            <iframe frameborder="0" height="800" scrolling="yes" :src="'http://localhost:3000/read/' + mode + '?hash=' + route.params.hash"></iframe>
+            <iframe frameborder="0" height="800" scrolling="yes" :src="`http://localhost:3000/${route.params.hash}/${mode}.html`"></iframe>
         </div>
         <table class="table is-fullwidth mt-4">
             <tr>

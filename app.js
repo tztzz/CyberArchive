@@ -1,4 +1,5 @@
-const app = require('express')()
+const express = require('express')
+const app = express()
 const sql = require('sqlite3').verbose()
 const workerpool = require('workerpool')
 const path = require('path')
@@ -23,6 +24,8 @@ const db = new sql.Database('./archive.db', (err) => {
         ) STRICT
     `)
 })
+
+app.use(express.static('data'))
 
 app.get('/', (req, res) => {
     res.send(pool.stats())
@@ -55,16 +58,6 @@ app.get('/entries', cors(corsOptions), async(req, res) => {
 app.get('/read/favicon', cors(corsOptions), (req, res) => {
     const fileHash = req.query.hash
     res.sendFile(path.join(__dirname, `data/${fileHash}/favicon.png`))
-})
-
-app.get('/read/dom', cors(corsOptions), (req, res) => {
-    const fileHash = req.query.hash
-    res.sendFile(path.join(__dirname, `data/${fileHash}/dom.html`))
-})
-
-app.get('/read/readability', cors(corsOptions), (req, res) => {
-    const fileHash = req.query.hash
-    res.sendFile(path.join(__dirname, `data/${fileHash}/readability.html`))
 })
 
 app.get('/read/metadata', cors(corsOptions), (req, res) => {

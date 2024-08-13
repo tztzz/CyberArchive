@@ -17,6 +17,14 @@ module.exports = {
             process.exit(0);
         }
 
+        // https://github.com/jsdom/jsdom/issues/3236
+        console.error = (msg, ...optionalParams) => {
+            if (msg.includes('Could not parse CSS stylesheet')) {
+                return
+            }
+            originalConsoleError(msg, ...optionalParams)
+        }
+
         const currentPath = path.join(process.cwd());
 
         const folderHash = crypto.createHash('sha256');
@@ -97,17 +105,28 @@ module.exports = {
                 });
 
                 // replace ops
-                console.log(cssHashes)
                 await fs.readFile(`${hashPath}/dom.html`, 'utf8', (err, data) => {
                     if (err) console.error(err)
-
-                    // match CSS and replace them with cassHashes
-
-                    /*
-                    fs.writeFile(`${hashPath}/dom.html`, data, err => {
+                
+                    const dom = new jsdom.JSDOM(data)
+                    const links = dom.window.document.querySelectorAll('link[rel="stylesheet"]')
+                
+                    links.forEach(link => {
+                        cssHashes.forEach(item => {
+                            if (link.href.includes(item.path)) {
+                                link.href = 'css/' + item.cssHash + '.css'
+                            }
+                        })
+                    })
+                
+                    const modified = dom.serialize()
+                
+                    fs.writeFile(`${hashPath}/dom.html`, modified, err => {
                         if (err) console.error(err)
                     })
-                    */
+                
+                    //console.log('File links:', Array.from(links).map(link => link.href));
+                
                 })
 
                 fs.writeFile(`${hashPath}/headers.json`, JSON.stringify(response.headers(), null, 2), err => {
